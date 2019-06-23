@@ -3,6 +3,6 @@
 .Rhistory
 .Rproj.user
 .dockerignore
-build.sh
-run.sh
+build.*
+run.*
 content/

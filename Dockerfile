@@ -1,4 +1,4 @@
-FROM rocker/verse:latest
+FROM rocker/verse:3.6.0
 
 LABEL maintainer="dm3ll3n@gmail.com"
 
@@ -17,7 +17,7 @@ RUN apt-get update && \
 # install Java 8 and ShinyProxy
 RUN apt-get install -y openjdk-8-jdk-headless && \
     mkdir -p /opt/shinyproxy && \
-    wget https://www.shinyproxy.io/downloads/shinyproxy-2.2.2.jar -O /opt/shinyproxy/shinyproxy.jar
+    wget https://www.shinyproxy.io/downloads/shinyproxy-2.3.0.jar -O /opt/shinyproxy/shinyproxy.jar
 
 COPY configs/shinyproxy/grid-layout /opt/shinyproxy/templates/grid-layout
 COPY configs/shinyproxy/application.yml /opt/shinyproxy/application.yml
