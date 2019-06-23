@@ -1,26 +1,24 @@
-ShinyStudio
-===========
+# ShinyStudio
 
-*A Docker image of RStudio + VS Code + Shiny Server, driven by ShinyProxy.*
----------------------------------------------------------------------------
+## *A Docker image of RStudio + VS Code + Shiny Server, driven by ShinyProxy.*
 
--   [Overview](#overview)
--   [Branches](#branches)
-    -   [Base](#base)
-    -   [Master](#master)
--   [Develop](#develop)
-    -   [Tools](#tools)
--   [Configuration](#configuration)
-    -   [Security](#security)
-    -   [Multiple Sites](#multiple-sites)
--   [References](#references)
+- [Overview](#Overview)
+- [Repos](#Repos)
+- [Setup from DockerHub](#Setup-from-DockerHub)
+    - [Customization](#Customization)
+- [Setup from GitHub](#Setup-from-GitHub)
+- [Develop](#Develop)
+- [Tools](#Tools)
+- [Security](#Security)
+- [Multiple Sites](#Multiple-Sites)
+    - [Shared Content](#Shared-Content)
+- [References](#References)
 
 ![](https://i.imgur.com/rtd29qCh.png)
 
 ![ShinyStudio](https://i.imgur.com/FIzE0d7.png)
 
-Overview
---------
+## Overview
 
 ShinyStudio is a Docker image which extends
 [rocker/verse](https://hub.docker.com/r/rocker/verse) to include
@@ -46,24 +44,19 @@ The ShinyStudio image consists of the products described below:
 
 ![](https://i.imgur.com/qc7bL1I.gif)
 
-Branches
---------
+## Repos
 
-The [GitHub repo for
-ShinyStudio](https://github.com/dm3ll3n/ShinyStudio) contains two major
-branches: `base` and `master`.
+The [GitHub repo for the ShinyStudio image](https://github.com/dm3ll3n/ShinyStudio-Image) is used to build the image published on DockerHub. The image is great for a personal instance, a quick demo, or the building blocks for a very customized setup.
 
--   The `base` branch is used to build the image published on DockerHub.
-    The image is great for a personal instance, a quick demo, or the
-    building blocks for a very customized setup.
--   The `master` branch builds upon the base image to provide an example
-    of a more enterprise-ready setup of ShinyStudio.
+https://github.com/dm3ll3n/ShinyStudio-Image
+
+The [repo for the enhanced setup of ShinyStudio](https://github.com/dm3ll3n/ShinyStudio) builds upon the base image to provide an example of a more enterprise-ready instance of ShinyStudio, including NGINX, InfluxDB, and control scripts.
+
+https://github.com/dm3ll3n/ShinyStudio
+
+## Setup from DockerHub
 
 > Setup must be run as a non-root user.
-
-### Base
-
-Setup of the base image can be done entirely with Docker.
 
 First, create a network named `shinystudio-net` to be shared by all
 spawned containers.
@@ -91,9 +84,20 @@ Once complete, open a web browser and navigate to
 `http://<hostname>:8080`. Log in with your username and the password
 `password`.
 
-For a more customized experience, alter pertinent environment variables
-and bind local volumes to the Docker image. A more personalized setup
-could look like:
+Variables:
+
+| **Variable** | **Default**           | **Explained**                                                                                   |
+|--------------|-----------------------|-------------------------------------------------------------------------------------------------|
+| USERID       | $USERID               | For proper permissions, this value should not be changed.                                       |
+| USER         | $USER                 | Username to use at the ShinyProxy login screen.                                                 |
+| PASSWORD     | password              | Password to use at the ShinyProxy login screen.                                                 |
+| MOUNTPOINT   | "${HOME}/ShinyStudio" | The path to store site content and user settings.                                               |
+| SITEID       | default               | Defines the folder name that this site’s content will reside in (`$MOUNTPOINT/sites/$SITEID`).  |
+| ROOT         | false                 | Grant root permission in RStudio / VS Code? Useful for testing, but changes are not persistent. |
+
+### Customization
+
+Use bind-mounts to overwrite the default ShinyProxy config ([read more](https://www.shinyproxy.io/configuration/)), the default background, or default logo.
 
 ``` text
 docker run --rm -it --name shinyproxy \
@@ -101,35 +105,21 @@ docker run --rm -it --name shinyproxy \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -e USERID=$USERID \
     -e USER=$USER \
-    -e PASSWORD=p@ssw0rd123 \
+    -e PASSWORD=password \
     -e MOUNTPOINT="${HOME}/ShinyStudio" \
-    -e SITEID=MyShinyStudio \
+    -e SITEID=default \
     -p 8080:8080 \
     -v "${PWD}/application.yml:/opt/shinyproxy/application.yml"
-    -v "${PWD}/imgs/background.png:/opt/shinyproxy/templates/grid=layout/assets/img/background.png" \
-    -v "${PWD}/imgs/logo.png:/opt/shinyproxy/templates/grid=layout/assets/img/logo.png"
+    -v "${PWD}/imgs/background.png:/opt/shinyproxy/templates/grid_layout/assets/img/background.png" \
+    -v "${PWD}/imgs/logo.png:/opt/shinyproxy/templates/grid_layout/assets/img/logo.png"
     dm3ll3n/shinystudio
 ```
 
-Explained:
+## Setup from GitHub
 
--   `MOUNTPOINT` defines the path to store site content and user
-    settings.
--   `SITEID` defines the folder name that this site’s content will
-    reside in (`$MOUNTPOINT/sites/$SITEID`).
--   The bind mount for `application.yml` specifies a custom ShinyProxy
-    configuration file ([read more
-    here](https://www.shinyproxy.io/configuration/)).
--   Bind mounts for `background.png` and `logo.png` allow easy
-    personalization of the site background and logo.
+The enhanced ShinyStudio setup requires Docker, docker-compose, and Git.
 
-### Master
-
-Setup of the master branch requires both Docker and docker-compose.
-
-For a more out-of-the-box setup, consider cloning/forking the [master
-branch](https://github.com/dm3ll3n/ShinyStudio/tree/master) from GitHub.
-e.g.,
+> Setup must be run as a non-root user.
 
 ``` text
 # Clone the master branch.
@@ -158,8 +148,7 @@ The default logins are:
 -   `admin`: `admin`
 -   `superadmin`: `superadmin`
 
-Develop
--------
+## Develop
 
 Open your IDE of choice and notice two important directories:
 
@@ -177,12 +166,12 @@ the appropriate directory.
 
 ![](https://i.imgur.com/lAuTMgBh.png)
 
-### Tools
+## Tools
 
 The ShinyStudio image comes with…
 
 -   R
--   Python
+-   Python 3
 -   PowerShell
 
 …and ODBC drivers for:
@@ -193,101 +182,22 @@ The ShinyStudio image comes with…
 
 These are persistent because they are built into the image.
 
-Apps / drivers installed through RStudio/VS Code will *not* persist.
-
-Libraries for R, Python, and PowerShell *will* persist. Additionally,
-user workspace settings (e.g. themes) are persistent.
-
-Configuration
--------------
-
-> The details below apply only to the master branch setup.
-
-### Security
-
-Authentication is managed by ShinyProxy, which supports basic auth,
-LDAP, Kerberos, and others ([read
-more](https://www.shinyproxy.io/configuration/)).
-
-By default, ShinyStudio defines three levels of access:
-
--   readers: can only view content from “Apps & Reports”, “Documents”,
-    and “Personal”.
--   admins: can view all site content and develop content with RStudio
-    and VS Code.
--   superadmins: can view and develop site content across multiple
-    instances of ShinyStudio.
-
-Admin/Superadmin landing page:
-
-![](https://i.imgur.com/qz55Vs5h.png)
-
-Readers:
-
-![](https://i.imgur.com/LupXe8fh.png)
-
-To apply a custom security configuration, modify the ShinyProxy
-configuration file for the site. All available options are detailed
-[here](https://www.shinyproxy.io/configuration/).
-
-``` text
-./sites/8080.yml
-```
-
-Open `8080.yml` and edit the following lines as desired:
-
-``` text
-authentication: simple
-users:
-  - name: superadmin
-    password: *change*me*
-    groups: superadmins
-  - name: admin
-    password: *change*me*
-    groups: admins
-  - name: user
-    password: *change*me*
-    groups: readers
-```
-
-After modifying any part of the configuration, stop and re-setup the
-site with:
-
-``` bash
-./control.sh setup "<mountpoint>"
-```
-
-### Multiple Sites
-
-Multiple instances of ShinyProxy can be mapped to different ports in
-order to segment content or provide unique customizations.
-
-The configs below will setup two unique, independent instances of
-ShinyStudio, hosted on ports 8080, 8081.
-
-``` text
-./sites/8080.yml
-./sites/8081.yml
-```
-
-![](https://i.imgur.com/xnIuVTW.png)
-
-#### Shared Content
-
-It is possible to have multiple sites with independent configurations
-have access to the same content. To do this, name the file
-`PORT_SITEID.yml`, where `PORT` is the port to broadcast on, and
-`SITEID` is the SITEID of the site that already has content.
-
-``` text
-./sites/8080.yml
-./sites/8081_8080.yml
-```
+|                             | Persistent |
+|----------------------------:|:----------:|
+| \_\_ShinyStudio__ directory |     Yes    |
+|    \_\_Personal__ directory |     Yes    |
+|           Other directories |   **No**   |
+|                 R Libraries |     Yes    |
+|             Python Packages |     Yes    |
+|          PowerShell Modules |     Yes    |
+|       RStudio User Settings |     Yes    |
+|       VS Code User Settings |     Yes    |
+|              Installed Apps |   **No**   |
+|           Installed Drivers |   **No**   |
 
 ![](https://i.imgur.com/lgKdx93.png)
 
-References
-----------
+## References
 
 -   <https://github.com/rocker-org/rocker-versioned/blob/master/rstudio/README.md>
 -   <https://www.shinyproxy.io/>

@@ -102,7 +102,9 @@ RUN wget https://downloads.cloudera.com/connectors/ClouderaImpala_ODBC_2.6.2.100
     dpkg -i /tmp/clouderaimpalaodbc_amd64.deb && \
     rm -f /tmp/clouderaimpalaodbc_amd64.deb
 
-# copy odbc driver and dns configs.
+# custom configs
+COPY configs/rstudio/rserver.conf /etc/rstudio/rserver_custom.conf
+
 COPY configs/odbc/odbcinst.ini /etc/odbcinst.ini
 COPY configs/odbc/odbc.ini /etc/odbc.ini
 
@@ -113,10 +115,6 @@ ENV KRB5_CONFIG /etc/krb5.conf
 COPY configs/rstudio/run /etc/services.d/rstudio/run
 COPY configs/vscode/run /etc/services.d/vscode/run
 COPY configs/shinyproxy/run /etc/services.d/shinyproxy/run
-
-# custom configs
-COPY configs/rstudio/rserver.conf /etc/rstudio/rserver_custom.conf
-# COPY configs/shiny/shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 # copy custom start command and make it executable.
 COPY configs/start.sh /start.sh
