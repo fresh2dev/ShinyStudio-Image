@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv bash           
+
+cd /opt/shinyproxy
+
+java -jar /opt/shinyproxy/shinyproxy.jar

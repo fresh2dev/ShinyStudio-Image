@@ -1,0 +1,8 @@
+.vscode
+.DS_Store
+.Rhistory
+.Rproj.user
+.dockerignore
+build.sh
+run.sh
+content/
