@@ -84,6 +84,10 @@ RUN wget https://github.com/cdr/code-server/releases/download/1.1119-vsc1.33.1/c
 COPY configs/vscode/User/settings.json /code-server-template/User/settings.json
 COPY configs/vscode/User/snippets /code-server-template/User/snippets
 
+# install kerberos
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get install -y krb5-user
+
 # install SQL Server odbc driver
 RUN apt-get install -y unixodbc && \
     wget https://packages.microsoft.com/debian/9/prod/pool/main/m/msodbcsql17/msodbcsql17_17.3.1.1-1_amd64.deb -O /tmp/msodbcsql.deb && \
@@ -101,6 +105,9 @@ RUN wget https://downloads.cloudera.com/connectors/ClouderaImpala_ODBC_2.6.2.100
 # copy odbc driver and dns configs.
 COPY configs/odbc/odbcinst.ini /etc/odbcinst.ini
 COPY configs/odbc/odbc.ini /etc/odbc.ini
+
+COPY configs/krb/krb5.conf /etc/krb5.conf
+ENV KRB5_CONFIG /etc/krb5.conf
 
 # copy custom run commands.
 COPY configs/rstudio/run /etc/services.d/rstudio/run
