@@ -5,7 +5,8 @@
         "*.Rmd": "markdown"
     },
     "python.venvPath": "/pyenv",
-    "python.jediEnabled": false,
+    "python.jediEnabled": true,
+    "python.autoUpdateLanguageServer": false,
     "python.dataScience.useDefaultConfigForJupyter": false,
     "python.dataScience.searchForJupyter": false,
     "python.dataScience.changeDirOnImportExport": false,
