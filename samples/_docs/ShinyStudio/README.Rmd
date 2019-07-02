@@ -79,7 +79,7 @@ docker run --rm -it --name shinyproxy \
     -e USERID=$USERID \
     -e USER=$USER \
     -e PASSWORD=password \
-    -e MOUNTPOINT="${HOME}/ShinyStudio" \
+    -e CONTENTPATH="${HOME}/ShinyStudio" \
     -e SITEID=default \
     -p 8080:8080 \
     dm3ll3n/shinystudio
@@ -94,13 +94,13 @@ docker run --rm -it --name shinyproxy `
     -e USERID=1000 `
     -e USER=$env:USERNAME `
     -e PASSWORD=password `
-    -e MOUNTPOINT="/host_mnt/c/Users/$env:USERNAME/ShinyStudio" `
+    -e CONTENTPATH="/host_mnt/c/Users/$env:USERNAME/ShinyStudio" `
     -e SITEID=default `
     -p 8080:8080 `
     dm3ll3n/shinystudio
 ```
 
-> Notice the unique form of the path for the `MOUNTPOINT` variable in the Windows setup.
+> Notice the unique form of the path for the `CONTENTPATH` variable in the Windows setup.
 
 Once complete, open a web browser and navigate to `http://<hostname>:8080`. Log in with your username and the password `password`.
 
@@ -111,8 +111,8 @@ Variables:
 | USERID       | \$USERID               | For proper permissions, this value should not be changed.                                       |
 | USER         | \$USER                 | Username to use at the ShinyProxy login screen.                                                 |
 | PASSWORD     | password              | Password to use at the ShinyProxy login screen.                                                 |
-| MOUNTPOINT   | "\${HOME}/ShinyStudio" | The path to store site content and user settings.                                               |
-| SITEID       | default               | Defines the folder name that this site’s content will reside in (`$MOUNTPOINT/sites/$SITEID`).  |
+| CONTENTPATH   | "\${HOME}/ShinyStudio" | The path to store site content and user settings.                                               |
+| SITEID       | default               | Defines the folder name that this site’s content will reside in (`$CONTENTPATH/sites/$SITEID`).  |
 | ROOT         | false                 | Grant root permission in RStudio / VS Code? Useful for testing, but changes are not persistent. |
 
 
@@ -142,7 +142,7 @@ cd ShinyStudio
 ./control.ps1 setup
 ```
 
-The default mountpoint is `$PWD/content`. To specify another mountpoint, pass the desired path as an argument to the setup:
+The default CONTENTPATH is `$PWD/content`. To specify another CONTENTPATH, pass the desired path as an argument to the setup:
 
 ``` text
 ./control.[sh|ps1] setup "$HOME/ShinyStudio"
@@ -268,10 +268,10 @@ After modifying any part of the configuration, stop and re-setup the site with:
 
 ``` bash
 # Linux / Mac
-./control.sh setup "<mountpoint>"
+./control.sh setup "<CONTENTPATH>"
 
 # Windows
-./control.ps1 setup "<mountpoint>"
+./control.ps1 setup "<CONTENTPATH>"
 ```
 
 ### Multiple Sites
