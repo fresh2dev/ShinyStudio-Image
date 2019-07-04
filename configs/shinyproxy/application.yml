@@ -19,9 +19,6 @@ proxy:
   container-wait-time: 30000
   heartbeat-rate: 15000
   heartbeat-timeout: 120000
-  # usage-stats-url: http://influxdb:8086/write?db=shinyproxy_usagestats
-  # usage-stats-username: '...'
-  # usage-stats-password: '...'
   docker:
     internal-networking: true
   specs:
@@ -32,10 +29,10 @@ proxy:
       container-cmd: ["/start.sh", "shiny-server"]
       container-network: shinystudio-net
       container-volumes:
-        - "${CONTENTPATH}/sites/${SITEID}/_apps:/srv/shiny-server:z"
-        - 'shinystudio_r_libraries:/r-libs'
-        - 'shinystudio_py_environment:/pyenv'
-        - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
+        - "${CONTENTPATH}/sites/${SITEPORT}/_apps:/srv/shiny-server:z"
+        - 'shinystudio_${SITEPORT}_r_libraries:/r-libs'
+        - 'shinystudio_${SITEPORT}_py_environment:/pyenv'
+        - 'shinystudio_${SITEPORT}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       access-groups: [ 'superadmins', 'admins', 'readers' ]
       container-env:
         USER: "#{proxy.userId}"
@@ -47,10 +44,10 @@ proxy:
       container-cmd: ["/start.sh", "shiny-server"]
       container-network: shinystudio-net
       container-volumes:
-        - "${CONTENTPATH}/sites/${SITEID}/_docs:/srv/shiny-server:z"
-        - 'shinystudio_r_libraries:/r-libs'
-        - 'shinystudio_py_environment:/pyenv'
-        - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
+        - "${CONTENTPATH}/sites/${SITEPORT}/_docs:/srv/shiny-server:z"
+        - 'shinystudio_${SITEPORT}_r_libraries:/r-libs'
+        - 'shinystudio_${SITEPORT}_py_environment:/pyenv'
+        - 'shinystudio_${SITEPORT}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       access-groups: [ 'superadmins', 'admins', 'readers' ]
       container-env:
         USER: "#{proxy.userId}"
@@ -63,9 +60,9 @@ proxy:
       container-network: shinystudio-net
       container-volumes:
         - "${CONTENTPATH}/users/#{proxy.userId}:/srv/shiny-server:z"
-        - 'shinystudio_r_libraries:/r-libs'
-        - 'shinystudio_py_environment:/pyenv'
-        - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
+        - 'shinystudio_${SITEPORT}_r_libraries:/r-libs'
+        - 'shinystudio_${SITEPORT}_py_environment:/pyenv'
+        - 'shinystudio_${SITEPORT}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       access-groups: [ 'superadmins', 'admins', 'readers' ]
       container-env:
         USER: "#{proxy.userId}"
@@ -77,12 +74,12 @@ proxy:
       container-cmd: ["/start.sh", "rstudio"]
       container-network: shinystudio-net
       container-volumes:
-        - "${CONTENTPATH}/sites/${SITEID}:/home/#{proxy.userId}/__ShinyStudio__:z"
+        - "${CONTENTPATH}/sites/${SITEPORT}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - "${CONTENTPATH}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
         - "${CONTENTPATH}/users/#{proxy.userId}/.rstudio:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z"
-        - 'shinystudio_r_libraries:/r-libs'
-        - 'shinystudio_py_environment:/pyenv'
-        - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
+        - 'shinystudio_${SITEPORT}_r_libraries:/r-libs'
+        - 'shinystudio_${SITEPORT}_py_environment:/pyenv'
+        - 'shinystudio_${SITEPORT}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
@@ -96,12 +93,12 @@ proxy:
       container-cmd: ["/start.sh", "vscode"]
       container-network: shinystudio-net
       container-volumes:
-        - "${CONTENTPATH}/sites/${SITEID}:/home/#{proxy.userId}/__ShinyStudio__:z"
+        - "${CONTENTPATH}/sites/${SITEPORT}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - "${CONTENTPATH}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
         - "${CONTENTPATH}/users/#{proxy.userId}/.vscode:/home/#{proxy.userId}/.local/share/code-server:z"
-        - 'shinystudio_r_libraries:/r-libs'
-        - 'shinystudio_py_environment:/pyenv'
-        - 'shinystudio_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
+        - 'shinystudio_${SITEPORT}_r_libraries:/r-libs'
+        - 'shinystudio_${SITEPORT}_py_environment:/pyenv'
+        - 'shinystudio_${SITEPORT}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules'
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}

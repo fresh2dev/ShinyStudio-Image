@@ -13,7 +13,7 @@ if [ -d "$site_dir" ]; then
     
     # if this is a superadmin, set correct site_dir path.
     if [ -d "$site_dir/users" ]; then
-        site_dir="${site_dir}/sites/${SITEID}"
+        site_dir="${site_dir}/sites/${SITEPORT}"
         mkdir -p "$site_dir"
     fi
     
