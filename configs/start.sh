@@ -13,7 +13,10 @@ if [ -d "$site_dir" ]; then
     
     # if this is a superadmin, set correct site_dir path.
     if [ -d "$site_dir/users" ]; then
-        site_dir="${site_dir}/sites/${SITEPORT}"
+        if [ -z "${SITE_NAME}" ]; then
+            SITE_NAME="shinystudio"
+        fi
+        site_dir="${site_dir}/sites/${SITE_NAME}"
         mkdir -p "$site_dir"
     fi
     
