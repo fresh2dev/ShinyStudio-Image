@@ -1,4 +1,4 @@
-FROM rocker/verse:3.6.0
+FROM rocker/verse:3.6.1
 
 LABEL maintainer="dm3ll3n@gmail.com"
 
