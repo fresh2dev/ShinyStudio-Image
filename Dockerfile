@@ -58,7 +58,7 @@ RUN echo "export PATH=\"${VIRTUAL_ENV}/bin:\${PATH}\"" >> /etc/profile && \
 # install pwsh
 # https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux
 RUN apt-get install -y libc6 libgcc1 libgssapi-krb5-2 liblttng-ust0 libstdc++6 libcurl3 libunwind8 libuuid1 zlib1g libssl1.0.2 libicu57 && \
-    wget https://github.com/PowerShell/PowerShell/releases/download/v6.2.1/powershell_6.2.1-1.debian.9_amd64.deb -O /tmp/pwsh.deb && \
+    wget https://github.com/PowerShell/PowerShell/releases/download/v6.2.3/powershell_6.2.3-1.debian.9_amd64.deb -O /tmp/pwsh.deb && \
     dpkg -i /tmp/pwsh.deb && \
     rm -f /tmp/pwsh.deb && \
     pwsh -c "Install-Module SqlServer -Force"
