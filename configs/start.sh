@@ -41,16 +41,6 @@ fi
 # are available in the rstudio user's environment.
 env | grep "SHINYPROXY" > "/home/${USER}/.Renviron"
 
-# set non-standard port for Jupyter notebook, for use in VS code.
-mkdir -p "/home/${USER}/.jupyter"
-
-echo "c.NotebookApp.ip = '127.0.0.1'
-c.NotebookApp.port = 12345
-c.NotebookApp.port_retries = 50
-c.NotebookApp.token = ''
-c.NotebookApp.open_browser = False
-c.NotebookApp.disable_check_xsrf = True" > "/home/${USER}/.jupyter/jupyter_notebook_config.py"
-
 
 # setup .gitconfig for this user.
 echo "[user]

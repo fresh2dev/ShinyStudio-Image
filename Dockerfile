@@ -64,7 +64,7 @@ RUN apt-get install -y libc6 libgcc1 libgssapi-krb5-2 liblttng-ust0 libstdc++6 l
     pwsh -c "Install-Module SqlServer -Force"
 
 # install VS code-server
-RUN wget https://github.com/cdr/code-server/releases/download/1.1156-vsc1.33.1/code-server1.1156-vsc1.33.1-linux-x64.tar.gz -O /tmp/vs-code-server.tar.gz && \
+RUN wget https://github.com/cdr/code-server/releases/download/2.1478-vsc1.38.1/code-server2.1478-vsc1.38.1-linux-x86_64.tar.gz -O /tmp/vs-code-server.tar.gz && \
     mkdir /tmp/vs-code-server && \
     tar -xzf /tmp/vs-code-server.tar.gz --strip 1 --directory /tmp/vs-code-server && \
     mv -f /tmp/vs-code-server/code-server /usr/local/bin/code-server && \
