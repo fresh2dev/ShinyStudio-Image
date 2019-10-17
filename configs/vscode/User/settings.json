@@ -10,5 +10,6 @@
     "python.dataScience.useDefaultConfigForJupyter": true,
     "python.dataScience.searchForJupyter": false,
     "python.dataScience.changeDirOnImportExport": false,
-    "files.hotExit": "off"
+    "files.hotExit": "off",
+    "files.autoSaveDelay": 20000
 }
