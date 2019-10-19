@@ -73,7 +73,14 @@ RUN wget https://github.com/cdr/code-server/releases/download/2.1478-vsc1.38.1/c
 COPY configs/vscode/User/settings.json /code-server-template/User/settings.json
 COPY configs/vscode/User/snippets /code-server-template/User/snippets
 
-# install kerberos
+# install cronicle.
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash && \
+    apt-get install -y nodejs && \
+    mkdir -p /opt/cronicle && \
+    cd /opt/cronicle && \
+    curl -L https://github.com/jhuckaby/Cronicle/archive/v0.8.32.tar.gz | tar zxvf - --strip-components 1 && \
+    npm install && \
+    node bin/build.js dist
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y krb5-user
 
@@ -104,6 +111,7 @@ ENV KRB5_CONFIG /etc/krb5.conf
 COPY configs/rstudio/run /etc/services.d/rstudio/run
 COPY configs/vscode/run /etc/services.d/vscode/run
 COPY configs/shinyproxy/run /etc/services.d/shinyproxy/run
+COPY configs/cronicle/run /etc/services.d/cronicle/run
 
 # copy custom start command and make it executable.
 COPY configs/start.sh /start.sh
