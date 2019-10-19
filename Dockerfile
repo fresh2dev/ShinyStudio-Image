@@ -27,15 +27,10 @@ RUN mkdir /r-libs && \
     echo ".libPaths( c( '/r-libs', .libPaths() ) )" >> /usr/local/lib/R/etc/Rprofile.site
 
 # install R packages
-# rmarkdown 1.12 does not display floating TOC; downgrade to 1.11.
-RUN R -e "install.packages(c('reticulate', 'png', 'DBI', 'odbc', 'shinydashboard', 'flexdashboard', 'shinycssloaders', 'DT', 'visNetwork', 'networkD3'))" && \
-    R -e "install.packages('https://cran.r-project.org/src/contrib/Archive/rmarkdown/rmarkdown_1.11.tar.gz', repos=NULL)"
+RUN R -e "install.packages(c('reticulate', 'DBI', 'odbc'))" && \
+    chmod -R 777 /r-libs
 
 COPY samples /srv/shiny-server
-RUN mkdir -p /srv/shiny-server/_apps && \
-    git clone https://github.com/dm3ll3n/Shiny-GEM /srv/shiny-server/_apps/Shiny-GEM && \
-    Rscript '/srv/shiny-server/_apps/Shiny-GEM/install-requirements.R' && \
-    chmod -R 777 /r-libs
 
 # setup python with miniconda.
 RUN wget -nv https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
