@@ -1,9 +1,22 @@
 #!/usr/bin/env bash
 
-# enter pyenv
-source "${VIRTUAL_ENV}/bin/activate"
+# ensure USER and USERID is not root.
+if [ "$USER" == "root" ]; then
+    USER="user"
+fi
 
-# setup $USER now
+if [ "$USERID" == "0" ]; then
+    USERID=1000
+fi
+
+if [ -z "$TAG" ]; then
+    export TAG="latest"
+fi
+
+# enter py env.
+source activate py3
+
+# setup $USER now.
 mv -f /etc/cont-init.d/userconf /tmp/userconf.sh
 chmod +x /tmp/userconf.sh
 source /tmp/userconf.sh
@@ -30,17 +43,11 @@ if [ -d "$site_dir" ]; then
             chown -R $USERID:$USERID "$dir"
         fi
     done
-
-    # first launch setup.
-    if [ -d "/home/${USER}/__Personal__/.vscode" ] && [ ! -f "/home/${USER}/__Personal__/.vscode/User/settings.json" ]; then
-        su - $USER -c 'cd ~ && export SHELL=/bin/bash && /setup_vscode.sh'
-    fi
 fi
 
 # Do this to ensure 'SHINYPROXY_USERNAME' and 'SHINYPROXY_GROUPS'
 # are available in the rstudio user's environment.
 env | grep "SHINYPROXY" > "/home/${USER}/.Renviron"
-
 
 # setup .gitconfig for this user.
 echo "[user]
