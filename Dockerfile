@@ -37,23 +37,17 @@ RUN mkdir -p /srv/shiny-server/_apps && \
     Rscript '/srv/shiny-server/_apps/Shiny-GEM/install-requirements.R' && \
     chmod -R 777 /r-libs
 
-# setup python
-ENV VIRTUAL_ENV /pyenv
-RUN apt-get update && \
-    apt-get install -y python3-pip python3-venv libpython-dev libpython3-dev python-dev python3-dev && \
-    python3 -m venv "${VIRTUAL_ENV}" && \
-    chmod -R 777 "${VIRTUAL_ENV}" && \
-    "${VIRTUAL_ENV}/bin/activate"
+# setup python with miniconda.
+RUN wget -nv https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+    bash /tmp/miniconda.sh -b -p /conda3 && \
+    /conda3/bin/conda create -y -n py3 python=3.7 && \
+    chmod -R 777 /conda3 && \
+    /conda3/bin/conda install -y --name py3 jupyter
 
-# install python packages
-ENV PATH "${VIRTUAL_ENV}/bin:${PATH}"
-RUN echo "export PATH=\"${VIRTUAL_ENV}/bin:\${PATH}\"" >> /etc/profile && \
-    pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org --upgrade pip && \
-    pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org wheel && \
-    pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org \
-        Cython numpy matplotlib pandas tqdm ezpq paramiko requests pylint jupyter && \
-    apt-get install -y python3-tk && \
-    pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org plotnine
+# set path
+ENV PATH "/conda3/bin:${PATH}"
+RUN echo "export PATH=\"/conda3/bin:\${PATH}\"" >> /etc/profile && \
+    echo ". activate py3" >> /etc/profile
 
 # install pwsh
 # https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux
