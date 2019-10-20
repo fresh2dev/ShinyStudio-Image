@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # ensure USER and USERID is not root.
-if [ "$USER" == "root" ]; then
+if [ -z "$USER" ] || [ "$USER" == "root" ]; then
     USER="user"
 fi
 
-if [ "$USERID" == "0" ]; then
+if [ -z "$USERID" ] || [ "$USERID" == "0" ]; then
     USERID=1000
 fi
 
