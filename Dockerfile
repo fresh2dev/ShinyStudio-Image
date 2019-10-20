@@ -1,6 +1,6 @@
 FROM rocker/verse:3.6.1
 
-ARG TAG
+ARG TAG="latest"
 ENV TAG=${TAG}
 
 LABEL maintainer="dm3ll3n@gmail.com"
