@@ -64,9 +64,6 @@ RUN wget -nv https://github.com/cdr/code-server/releases/download/2.1523-vsc1.38
     mkdir -p /src/packages/server/build/web && \
     echo '' > /src/packages/server/build/web/index.html
 
-COPY configs/vscode/User/settings.json /code-server-template/User/settings.json
-COPY configs/vscode/User/snippets /code-server-template/User/snippets
-
 # install cronicle.
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash && \
     apt-get install -y nodejs && \
