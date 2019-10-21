@@ -7,8 +7,6 @@ export CRONICLE_web_direct_connect=0
 
 if [ ! -d "/opt/cronicle/data" ]; then
     /opt/cronicle/bin/control.sh setup
-    /opt/cronicle/bin/control.sh admin admin $(date +%s | sha256sum | base64 | head -c 32 ; echo) "${CRONICLE_ADMIN_EMAIL:-admin@localhost}"
-    /opt/cronicle/bin/control.sh admin "${USER:-admin}" "${PASSWORD:-admin}" "${CRONICLE_ADMIN_EMAIL:-admin@localhost}"
 fi
 
 /opt/cronicle/bin/control.sh start
