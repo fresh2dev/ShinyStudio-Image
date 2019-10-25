@@ -30,7 +30,7 @@ RUN mkdir /r-libs && \
     echo ".libPaths( c( '/r-libs', .libPaths() ) )" >> /usr/local/lib/R/etc/Rprofile.site
 
 # install R packages
-RUN R -e "install.packages(c('reticulate', 'png', 'DBI', 'odbc'))" && \
+RUN R -e "install.packages(c('reticulate', 'png', 'DBI', 'odbc', 'shinydashboard', 'DT', 'magrittr', 'lubridate', 'ggplot2'))" && \
     chmod -R 777 /r-libs
 
 COPY samples /srv/shiny-server
