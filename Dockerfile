@@ -36,23 +36,18 @@ RUN R -e "install.packages(c('reticulate', 'png', 'DBI', 'odbc', 'shinydashboard
 COPY samples /srv/shiny-server
 
 # setup python with miniconda.
+ENV VIRTUAL_ENV=py3
 RUN wget -nv https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
     bash /tmp/miniconda.sh -b -p /conda3 && \
-    /conda3/bin/conda create -y -n py3 python=3.7 && \
+    /conda3/bin/conda create -y -n $VIRTUAL_ENV python=3.7 && \
     chmod -R 777 /conda3 && \
-    /conda3/bin/conda install -y --name py3 jupyter
+    /conda3/bin/conda install -y --name $VIRTUAL_ENV jupyter
 
 # set path
 ENV PATH "/conda3/bin:${PATH}"
 RUN echo "export PATH=\"/conda3/bin:\${PATH}\"" >> /etc/profile && \
-    echo ". activate py3" >> /etc/profile
-
-# install pwsh.
-# https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux
-RUN apt-get install -y libc6 libgcc1 libgssapi-krb5-2 liblttng-ust0 libstdc++6 libcurl3 libunwind8 libuuid1 zlib1g libssl1.0.2 libicu57 && \
-    wget -nv https://github.com/PowerShell/PowerShell/releases/download/v6.2.3/powershell_6.2.3-1.debian.9_amd64.deb -O /tmp/pwsh.deb && \
-    dpkg -i /tmp/pwsh.deb && \
-    rm -f /tmp/pwsh.deb
+    echo ". activate $VIRTUAL_ENV" >> /etc/profile && \
+    echo '$env:PATH = "/conda3/envs/$($env:VIRTUAL_ENV)/bin:" + $env:PATH' >> /opt/microsoft/powershell/6/profile.ps1
 
 # install VS code-server.
 RUN wget -nv https://github.com/cdr/code-server/releases/download/2.1650-vsc1.39.2/code-server2.1650-vsc1.39.2-linux-x86_64.tar.gz -O /tmp/vs-code-server.tar.gz && \
