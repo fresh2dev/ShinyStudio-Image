@@ -25,7 +25,7 @@ site_dir="/home/${USER}/__ShinyStudio__"
 if [ -d "$site_dir" ]; then
     
     # if this is a superadmin, set correct site_dir path.
-    if [ -d "$site_dir/users" ]; then
+    if [ -d "$site_dir/users" ] || [ "$(hostname)" == "cronicle" ]; then
         if [ -z "${SITE_NAME}" ]; then
             SITE_NAME="shinystudio"
         fi
@@ -64,6 +64,7 @@ if [ -z "$svc" ]; then
     svc='shinyproxy'
 fi
 
+# remove all services that are not $svc
 find /etc/services.d/* -type d -not -name "$svc" | xargs rm -rf
 
 /init
