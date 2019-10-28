@@ -35,6 +35,13 @@ RUN R -e "install.packages(c('reticulate', 'png', 'DBI', 'odbc', 'shinydashboard
 
 COPY samples /srv/shiny-server
 
+# install pwsh.
+# https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux
+RUN apt-get install -y libc6 libgcc1 libgssapi-krb5-2 liblttng-ust0 libstdc++6 libcurl3 libunwind8 libuuid1 zlib1g libssl1.0.2 libicu57 && \
+    wget -nv https://github.com/PowerShell/PowerShell/releases/download/v6.2.3/powershell_6.2.3-1.debian.9_amd64.deb -O /tmp/pwsh.deb && \
+    dpkg -i /tmp/pwsh.deb && \
+    rm -f /tmp/pwsh.deb
+
 # setup python with miniconda.
 ENV VIRTUAL_ENV=py3
 RUN wget -nv https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
