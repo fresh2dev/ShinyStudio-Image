@@ -14,7 +14,7 @@ if [ -z "$TAG" ]; then
 fi
 
 # enter py env.
-source activate py3
+source activate $VIRTUAL_ENV
 
 # setup $USER now.
 mv -f /etc/cont-init.d/userconf /tmp/userconf.sh
