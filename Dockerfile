@@ -68,6 +68,8 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash && \
     npm install && \
     node bin/build.js dist
 
+COPY configs/cronicle/jobs /jobs
+
 # install kerberos.
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y krb5-user
