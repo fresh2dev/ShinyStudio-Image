@@ -1,12 +1,16 @@
 #!/usr/bin/with-contenv bash
-export CRONICLE_foreground=1
-export CRONICLE_echo=1
-export CRONICLE_web_socket_use_hostnames=1
-export CRONICLE_server_comm_use_hostnames=1
-export CRONICLE_web_direct_connect=0
 
 if [ ! -d "/opt/cronicle/data" ]; then
     /opt/cronicle/bin/control.sh setup
+
+    if [ -f "/opt/cronicle/conf/init.conf" ]; then
+        /opt/cronicle/bin/control.sh import "/opt/cronicle/conf/init.conf" 
+    fi
 fi
 
+CRONICLE_foreground=1 \
+CRONICLE_echo=1 \
+CRONICLE_web_socket_use_hostnames=1 \
+CRONICLE_server_comm_use_hostnames=1 \
+CRONICLE_web_direct_connect=0 \
 /opt/cronicle/bin/control.sh start

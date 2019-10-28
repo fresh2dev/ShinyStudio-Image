@@ -97,6 +97,8 @@ COPY configs/odbc/odbc.ini /etc/odbc.ini
 COPY configs/krb/krb5.conf /etc/krb5.conf
 ENV KRB5_CONFIG /etc/krb5.conf
 
+COPY configs/cronicle/init.conf /opt/cronicle/conf/init.conf
+
 # copy custom run commands.
 COPY configs/rstudio/run /etc/services.d/rstudio/run
 COPY configs/vscode/run /etc/services.d/vscode/run
