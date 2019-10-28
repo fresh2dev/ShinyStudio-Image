@@ -1,5 +1,5 @@
 #!/usr/bin/with-contenv bash
-su  $USER -c 'cd ~ && \
+su $USER -c 'cd ~ && \
 export SHELL=/bin/bash && \
 cat /etc/profile > ~/.bashrc && \
-/usr/local/bin/code-server --allow-http --no-auth --disable-telemetry'
+/usr/local/bin/code-server --auth none --disable-telemetry "$HOME"'
