@@ -74,30 +74,33 @@ The setup has been verified to work on each of [Docker](https://docs.docker.com/
 
 To download and run the ShinyStudio image from [DockerHub](https://hub.docker.com/r/dm3ll3n/shinystudio), first, create a docker network named `shinystudio-net`:
 
-```text
-docker network create shinystudio-net
-```
-
 Then, execute `docker run` in the terminal for your OS:
 
-* Bash (Linux/Mac)
+<details>
+<summary>Bash (Linux/Mac)</summary>
 
 ``` text
+docker network create shinystudio-net && \
 docker run -d --restart always --name shinyproxy \
     --network shinystudio-net \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    -e USERID=$USERID \
+    -e USERID=$UID \
     -e USER=$USER \
     -e PASSWORD=password \
     -e CONTENT_PATH="${HOME}/ShinyStudio" \
     -e SITE_NAME=shinystudio \
-    -p 8080:8080 \
+    -p 80:8080 \
     dm3ll3n/shinystudio
 ```
 
-* PowerShell (Windows)
+</details>
+<br/>
+
+<details>
+<summary>PowerShell</summary>
 
 ```text
+docker network create shinystudio-net;
 docker run -d --restart always --name shinyproxy `
     --network shinystudio-net `
     -v /var/run/docker.sock:/var/run/docker.sock `
@@ -106,13 +109,16 @@ docker run -d --restart always --name shinyproxy `
     -e PASSWORD=password `
     -e CONTENT_PATH="/host_mnt/c/Users/$env:USERNAME/ShinyStudio" `
     -e SITE_NAME=shinystudio `
-    -p 8080:8080 `
+    -p 8080:8080 -e TAG=latest `
     dm3ll3n/shinystudio
 ```
 
-> Notice the unique form of the path for the `CONTENT_PATH` variable in the Windows setup.
+> Notice the unique form of the path for the `CONTENT_PATH` variable.
 
-Once complete, open a web browser and navigate to `http://<hostname>:8080`. Log in with your username and the password `password`.
+</details>
+<br/>
+
+Once complete, open a web browser and navigate to `http://<hostname>`. Log in with your username and the password `password`.
 
 ### Stack
 
@@ -121,7 +127,7 @@ The *stack* distribution of ShinyStudio is delivered through the [GitHub repo](h
 * [docker-compose](https://docs.docker.com/compose/install/) (ships with Docker Desktop)
 * [Git](https://git-scm.com/downloads)
 
-HTTPS is configured by default, so SSL/TLS certs are required in order for the stack to operate. Use the provided script `certify.sh` (`certify.ps1` for Windows) to create a self-signed certificate, or to request one from LetsEncrypt (more on that).
+HTTPS is on by default, so SSL/TLS certs are required in order for the stack to operate. Use the provided script `certify.sh` (`certify.ps1` for Windows) to create a self-signed certificate, or to request one from LetsEncrypt (more on that).
 
 #### Minimal setup:
 
@@ -133,7 +139,11 @@ git clone https://github.com/dm3ll3n/ShinyStudio
 cd ShinyStudio
 
 # run certify to generate self-signed cert.
-./certify.[sh/ps1]
+## Bash users run:
+./certify.sh
+
+## Powershell users run:
+./certify.ps1
 ```
 
 Now, browse to `http://<hostname>` (e.g., `http://localhost`) to access ShinyStudio. On first launch, you will need to accept the warning about an untrusted certificate. See the customized setup to see how to request a trusted cert from LetsEncrypt.
@@ -151,13 +161,17 @@ The default logins are below. See the customized setup to see how to add/remove 
 
 There are three files essential to a customized configuration:
 
-1. `.env`
+<details>
+<summary>.env</summary>
 
 > The docker-compose environment file. The project name, content path, and HTTP ports can be changed here.
 
 Note that Docker volume names are renamed along with the project name, so be prepared to migrate or recreate data stored in Docker volumes when changing the project name.
+</details>
+<br/>
 
-2. `application.yml`
+<details>
+<summary>application.yml</summary>
 
 > The ShinyProxy config file. Users can be added/removed here. Other configurations are available too, such as the site title and the ability to provide a non-standard landing page.
 
@@ -168,14 +182,21 @@ Using the provided template, you can assign users to the following groups with t
 - **superadmins**: can view and develop site content across multiple instances of ShinyStudio. Can also manage *all* user files.
 
 Review the [ShinyProxy configuration documentation](https://www.shinyproxy.io/configuration/) for all options.
+</details>
+<br/>
 
-3. `nginx.conf`
+<details>
+<summary>nginx.conf</summary>
 
 > The NGINX config file. Defines the accepted site name and what ports to listen on.
 
 If you change the ports here, you must also change the ports defined in the `.env` file. Also, if you change the domain name, you must provide/generate a new certificate for it.
 
-4. `certify.[sh/ps1]`
+</details>
+<br>
+
+<details>
+<summary>certify.[sh/ps1]</summary>
 
 > The script used to generate a self-signed cert, or to request a trusted cert from LetsEncrypt.
 
@@ -208,6 +229,8 @@ docker-compose down
 # start all services.
 docker-compose up -d
 ```
+</details>
+<br/>
 
 ## Develop
 
