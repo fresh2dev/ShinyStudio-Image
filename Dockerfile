@@ -57,7 +57,7 @@ RUN echo "export PATH=\"/conda3/bin:\${PATH}\"" >> /etc/profile && \
     echo '$env:PATH = "/conda3/envs/$($env:VIRTUAL_ENV)/bin:" + $env:PATH' >> /opt/microsoft/powershell/6/profile.ps1
 
 # install VS code-server.
-RUN wget -nv https://github.com/cdr/code-server/releases/download/2.1665-vsc1.39.2/code-server2.1665-vsc1.39.2-linux-x86_64.tar.gz -O /tmp/vs-code-server.tar.gz && \
+RUN wget -nv https://github.com/cdr/code-server/releases/download/2.1688-vsc1.39.2/code-server2.1688-vsc1.39.2-linux-x86_64.tar.gz -O /tmp/vs-code-server.tar.gz && \
     mkdir /tmp/vs-code-server && \
     tar -xzf /tmp/vs-code-server.tar.gz --strip 1 --directory /tmp/vs-code-server && \
     mv -f /tmp/vs-code-server/code-server /usr/local/bin/code-server && \
