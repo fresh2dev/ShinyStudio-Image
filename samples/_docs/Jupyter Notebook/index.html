@@ -13079,31 +13079,43 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Use VS code to author Python scripts and easily convert them to Jupyter notebooks.</p>
 <p>Afterward, convert the Jupyter notebook (.ipynb) to HTML so it is viewable in Shiny Server.</p>
-<p><code>jupyter nbconvert *.ipynb --to html -y --template full</code></p>
+<p><code>jupyter nbconvert *.ipynb --to html -y --template full --execute</code></p>
 <p>See more: <a href="https://code.visualstudio.com/docs/python/jupyter-support">https://code.visualstudio.com/docs/python/jupyter-support</a></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="This-document-is-rendered-on-a-schedule.">This document is rendered on a schedule.<a class="anchor-link" href="#This-document-is-rendered-on-a-schedule.">&#182;</a></h1><h1>To adjust the schedule, access Cronicle at http://<hostname>:8080</h1>
+<p>This document is rendered on a schedule.</p>
+<p>To adjust the schedule, access Cronicle at <a href="https://localhost:8443">https://localhost:8443</a></p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[0]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
  
-<span class="k">print</span><span class="p">(</span><span class="s1">&#39;Last rendered (UTC): &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Last rendered (UTC): &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()))</span>
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Last rendered (UTC): 2019-11-15 04:18:47.728531
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
