@@ -1,5 +1,12 @@
-FROM rocker/verse:3.6.1
+ARG VER_RLANG="3.6.1"
 
+FROM rocker/verse:${VER_RLANG}
+
+ARG VER_PYTHON="3.7"
+ARG VER_PWSH="6.2.3"
+ARG VER_SHINYPROXY="2.3.0"
+ARG VER_VSCODE="2.1692-vsc1.39.2"
+ARG VER_CRONICLE="0.8.32"
 ARG TAG="latest"
 ENV TAG=${TAG}
 
@@ -20,7 +27,7 @@ RUN apt-get update && \
 # install Java 8 and ShinyProxy
 RUN apt-get install -y openjdk-8-jdk-headless && \
     mkdir -p /opt/shinyproxy && \
-    wget -nv https://www.shinyproxy.io/downloads/shinyproxy-2.3.0.jar -O /opt/shinyproxy/shinyproxy.jar
+    wget -nv "https://www.shinyproxy.io/downloads/shinyproxy-${VER_SHINYPROXY}.jar" -O /opt/shinyproxy/shinyproxy.jar
 
 COPY configs/shinyproxy/grid-layout /opt/shinyproxy/templates/grid-layout
 COPY configs/shinyproxy/application.yml /opt/shinyproxy/application.yml
@@ -38,7 +45,7 @@ COPY samples /srv/shiny-server
 # install pwsh.
 # https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux
 RUN apt-get install -y libc6 libgcc1 libgssapi-krb5-2 liblttng-ust0 libstdc++6 libcurl3 libunwind8 libuuid1 zlib1g libssl1.0.2 libicu57 && \
-    wget -nv https://github.com/PowerShell/PowerShell/releases/download/v6.2.3/powershell_6.2.3-1.debian.9_amd64.deb -O /tmp/pwsh.deb && \
+    wget -nv "https://github.com/PowerShell/PowerShell/releases/download/v${VER_PWSH}/powershell_${VER_PWSH}-1.debian.9_amd64.deb" -O /tmp/pwsh.deb && \
     dpkg -i /tmp/pwsh.deb && \
     rm -f /tmp/pwsh.deb
 
@@ -46,7 +53,7 @@ RUN apt-get install -y libc6 libgcc1 libgssapi-krb5-2 liblttng-ust0 libstdc++6 l
 ENV VIRTUAL_ENV=py3
 RUN wget -nv https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh && \
     bash /tmp/miniconda.sh -b -p /conda3 && \
-    /conda3/bin/conda create -y -n $VIRTUAL_ENV python=3.7 && \
+    /conda3/bin/conda create -y -n $VIRTUAL_ENV python=${VER_PYTHON} && \
     chmod -R 777 /conda3 && \
     /conda3/bin/conda install -y --name $VIRTUAL_ENV jupyter pylint
 
@@ -57,7 +64,7 @@ RUN echo "export PATH=\"/conda3/bin:\${PATH}\"" >> /etc/profile && \
     echo '$env:PATH = "/conda3/envs/$($env:VIRTUAL_ENV)/bin:" + $env:PATH' >> /opt/microsoft/powershell/6/profile.ps1
 
 # install VS code-server.
-RUN wget -nv https://github.com/cdr/code-server/releases/download/2.1688-vsc1.39.2/code-server2.1688-vsc1.39.2-linux-x86_64.tar.gz -O /tmp/vs-code-server.tar.gz && \
+RUN wget -nv "https://github.com/cdr/code-server/releases/download/${VER_VSCODE}/code-server${VER_VSCODE}-linux-x86_64.tar.gz" -O /tmp/vs-code-server.tar.gz && \
     mkdir /tmp/vs-code-server && \
     tar -xzf /tmp/vs-code-server.tar.gz --strip 1 --directory /tmp/vs-code-server && \
     mv -f /tmp/vs-code-server/code-server /usr/local/bin/code-server && \
@@ -71,7 +78,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash && \
     apt-get install -y nodejs && \
     mkdir -p /opt/cronicle && \
     cd /opt/cronicle && \
-    curl -L https://github.com/jhuckaby/Cronicle/archive/v0.8.32.tar.gz | tar zxvf - --strip-components 1 && \
+    curl -L "https://github.com/jhuckaby/Cronicle/archive/v${VER_CRONICLE}.tar.gz" | tar zxvf - --strip-components 1 && \
     npm install && \
     node bin/build.js dist
 
