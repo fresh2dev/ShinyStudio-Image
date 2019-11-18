@@ -1,7 +1,3 @@
-# ShinyStudio
-
-## *A fully Dockerized, self-hosted development environment for teams. Develop where you serve.*
-
   - [Overview](#overview)
   - [Getting Started](#getting-started)
       - [Minimal setup:](#minimal-setup)
