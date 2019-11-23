@@ -1,6 +1,10 @@
 ARG VER_RLANG="3.6.1"
 
-FROM rocker/verse:${VER_RLANG}
+FROM rocker/verse:${VER_RLANG} as rstudio
+
+FROM scratch
+
+COPY --from=rstudio / /
 
 ARG VER_PYTHON="3.7"
 ARG VER_PWSH="6.2.3"
@@ -105,6 +109,8 @@ RUN wget -nv https://downloads.cloudera.com/connectors/ClouderaImpala_ODBC_2.6.2
 
 # custom configs.
 COPY configs/rstudio/rserver.conf /etc/rstudio/rserver_custom.conf
+
+COPY configs/vscode/install-extension.sh /install-extension.sh
 
 COPY configs/odbc/odbcinst.ini /etc/odbcinst.ini
 COPY configs/odbc/odbc.ini /etc/odbc.ini
