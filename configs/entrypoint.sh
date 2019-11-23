@@ -43,6 +43,25 @@ if [ -d "$site_dir" ]; then
             chown -R $USERID:$USERID "$dir"
         fi
     done
+
+    vscode_settings="/home/${USER}/__Personal__/.vscode/User/settings.json"
+
+    if [ ! -f "$vscode_settings" ]; then
+        mkdir -p "$(dirname "$vscode_settings")"
+        
+        echo '{
+    "python.venvPath": "/conda3/envs",
+    "python.condaPath": "/conda3/bin/conda",
+    "terminal.integrated.inheritEnv": true,
+    "extensions.autoUpdate": false,
+    "files.associations": {
+        "*.Rmd": "markdown"
+    }
+}
+' > "$vscode_settings"
+
+        chown $USERID:$USERID "$vscode_settings"
+    fi
 fi
 
 # Do this to ensure 'SHINYPROXY_USERNAME' and 'SHINYPROXY_GROUPS'
