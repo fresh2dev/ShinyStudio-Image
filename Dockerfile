@@ -60,7 +60,7 @@ RUN wget -nv https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.
     rm -f /tmp/miniconda.sh && \
     /conda3/bin/conda create -y -n $VIRTUAL_ENV python=${VER_PYTHON} && \
     chmod -R 777 /conda3 && \
-    /conda3/bin/conda install -y --name $VIRTUAL_ENV jupyter pylint
+    /conda3/bin/conda install -y --name $VIRTUAL_ENV jupyter pylint openssl
 
 # set path
 ENV PATH "/conda3/bin:${PATH}"
