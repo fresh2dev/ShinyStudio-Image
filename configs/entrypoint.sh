@@ -50,10 +50,8 @@ if [ -d "$site_dir" ]; then
         mkdir -p "$(dirname "$vscode_settings")"
         
         echo '{
-    "python.venvPath": "/conda3/envs",
-    "python.condaPath": "/conda3/bin/conda",
-    "terminal.integrated.inheritEnv": true,
     "extensions.autoUpdate": false,
+    "python.venvPath": "/conda3/envs",
     "files.associations": {
         "*.Rmd": "markdown"
     }
