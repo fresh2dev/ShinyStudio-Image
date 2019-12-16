@@ -110,7 +110,7 @@ RUN wget -nv https://downloads.cloudera.com/connectors/ClouderaImpala_ODBC_2.6.2
 # custom configs.
 COPY configs/rstudio/rserver.conf /etc/rstudio/rserver_custom.conf
 
-COPY configs/vscode/install-extension.sh /install-extension.sh
+COPY configs/vscode/install-vscode-python.sh /install-vscode-python.sh
 
 COPY configs/odbc/odbcinst.ini /etc/odbcinst.ini
 COPY configs/odbc/odbc.ini /etc/odbc.ini
