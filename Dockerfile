@@ -1,4 +1,4 @@
-ARG VER_RLANG="3.6.1"
+ARG VER_RLANG="3.6.2"
 
 FROM rocker/verse:${VER_RLANG} as rstudio
 
@@ -7,10 +7,10 @@ FROM scratch
 COPY --from=rstudio / /
 
 ARG VER_PYTHON="3.7"
-ARG VER_PWSH="6.2.3"
+ARG VER_PWSH="6.2.4"
 ARG VER_SHINYPROXY="2.3.0"
-ARG VER_VSCODE="2.1692-vsc1.39.2"
-ARG VER_CRONICLE="0.8.32"
+ARG VER_VSCODE="2.1698-vsc1.41.1"
+ARG VER_CRONICLE="0.8.44"
 ARG TAG="latest"
 ENV TAG=${TAG}
 
@@ -69,7 +69,8 @@ RUN echo "export PATH=\"/conda3/bin:\${PATH}\"" >> /etc/profile && \
     echo '$env:PATH = "/conda3/envs/$($env:VIRTUAL_ENV)/bin:" + $env:PATH' >> /opt/microsoft/powershell/6/profile.ps1
 
 # install VS code-server.
-RUN wget -nv "https://github.com/cdr/code-server/releases/download/${VER_VSCODE}/code-server${VER_VSCODE}-linux-x86_64.tar.gz" -O /tmp/vs-code-server.tar.gz && \
+RUN VER_CODESERVER=$(echo "$VER_VSCODE" | cut -d'-' -f1) && \
+    wget -nv "https://github.com/cdr/code-server/releases/download/${VER_CODESERVER}/code-server${VER_VSCODE}-linux-x86_64.tar.gz" -O /tmp/vs-code-server.tar.gz && \
     mkdir /tmp/vs-code-server && \
     tar -xzf /tmp/vs-code-server.tar.gz --strip 1 --directory /tmp/vs-code-server && \
     mv -f /tmp/vs-code-server/code-server /usr/local/bin/code-server && \
@@ -127,7 +128,7 @@ COPY configs/shinyproxy/run /etc/services.d/shinyproxy/run
 COPY configs/cronicle/run /etc/services.d/cronicle/run
 
 # copy custom start command and make it executable.
-COPY configs/entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT [ "/entrypoint.sh" ]

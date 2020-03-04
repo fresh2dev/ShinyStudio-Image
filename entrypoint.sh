@@ -81,18 +81,6 @@ if [ -z "$svc" ]; then
     svc='shinyproxy'
 fi
 
-if [ "$svc" == "shinyproxy" ] && [ ! -z "$DOMAIN_NAME" ] && [ ! -d "/etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem" ]; then
-    curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf > /etc/letsencrypt/options-ssl-nginx.conf && \
-    curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > /etc/letsencrypt/ssl-dhparams.pem
-
-    mkdir -p "/etc/letsencrypt/live/$DOMAIN_NAME"
-
-    openssl req -x509 -nodes -newkey rsa:1024 -days 365 \
-        -keyout "/etc/letsencrypt/live/$DOMAIN_NAME/privkey.pem" \
-        -out "/etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem" \
-        -subj "/CN=$DOMAIN_NAME"
-fi
-
 # remove all services that are not $svc
 find /etc/services.d/* -type d -not -name "$svc" | xargs rm -rf
 
