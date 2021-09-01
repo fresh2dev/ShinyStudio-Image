@@ -25,7 +25,7 @@ proxy:
     - id: reports
       display-name: Apps & Reports
       logo-url: 'fas fa-chart-line'
-      container-image: dm3ll3n/shinystudio:${TAG}
+      container-image: shinystudio:${TAG}
       container-cmd: [ "shiny-server" ]
       container-network: shinystudio-net
       container-volumes:
@@ -40,7 +40,7 @@ proxy:
     - id: documents
       display-name: Documents
       logo-url: 'fas fa-file-alt'
-      container-image: dm3ll3n/shinystudio:${TAG}
+      container-image: shinystudio:${TAG}
       container-cmd: [ "shiny-server" ]
       container-network: shinystudio-net
       container-volumes:
@@ -55,7 +55,7 @@ proxy:
     - id: personal
       display-name: Personal
       logo-url: 'far fa-folder-open'
-      container-image: dm3ll3n/shinystudio:${TAG}
+      container-image: shinystudio:${TAG}
       container-cmd: [ "shiny-server" ]
       container-network: shinystudio-net
       container-volumes:
@@ -70,7 +70,7 @@ proxy:
     - id: rstudio
       display-name: RStudio
       logo-url: 'fab fa-r-project'
-      container-image: dm3ll3n/shinystudio:${TAG}
+      container-image: shinystudio:${TAG}
       container-cmd: [ "rstudio" ]
       container-network: shinystudio-net
       container-volumes:
@@ -89,7 +89,7 @@ proxy:
     - id: vscode
       display-name: Visual Studio Code
       logo-url: 'fas fa-terminal'
-      container-image: dm3ll3n/shinystudio:${TAG}
+      container-image: shinystudio:${TAG}
       container-cmd: [ "vscode" ]
       container-network: shinystudio-net
       container-volumes:

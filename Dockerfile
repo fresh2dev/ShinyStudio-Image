@@ -1,4 +1,4 @@
-ARG VER_RLANG="3.6.2"
+ARG VER_RLANG="3.6.3"
 
 FROM rocker/verse:${VER_RLANG} as rstudio
 
@@ -6,12 +6,12 @@ FROM scratch
 
 COPY --from=rstudio / /
 
-ARG VER_PYTHON="3.7"
-ARG VER_PWSH="6.2.4"
-ARG VER_SHINYPROXY="2.3.0"
-ARG VER_VSCODE="2.1698-vsc1.41.1"
-ARG VER_CRONICLE="0.8.44"
-ARG TAG="latest"
+ARG VER_PYTHON="3.9"
+ARG VER_PWSH="7.1.4"
+ARG VER_SHINYPROXY="2.5.0"
+ARG VER_VSCODE="3.11.1"
+ARG VER_CRONICLE="0.8.61"
+ARG TAG="dev"
 ENV TAG=${TAG}
 
 LABEL maintainer="dm3ll3n@gmail.com"
@@ -29,7 +29,7 @@ RUN apt-get update && \
     apt-get install -y curl nano
 
 # install Java 8 and ShinyProxy
-RUN apt-get install -y openjdk-8-jdk-headless && \
+RUN apt-get install -y openjdk-11-jdk-headless && \
     mkdir -p /opt/shinyproxy && \
     wget -nv "https://www.shinyproxy.io/downloads/shinyproxy-${VER_SHINYPROXY}.jar" -O /opt/shinyproxy/shinyproxy.jar
 
@@ -48,8 +48,8 @@ COPY samples /srv/shiny-server
 
 # install pwsh.
 # https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux
-RUN apt-get install -y libc6 libgcc1 libgssapi-krb5-2 liblttng-ust0 libstdc++6 libcurl3 libunwind8 libuuid1 zlib1g libssl1.0.2 libicu57 && \
-    wget -nv "https://github.com/PowerShell/PowerShell/releases/download/v${VER_PWSH}/powershell_${VER_PWSH}-1.debian.9_amd64.deb" -O /tmp/pwsh.deb && \
+RUN apt-get install -y less locales ca-certificates libicu63 libssl1.1 libc6 libgcc1 libgssapi-krb5-2 liblttng-ust0 libstdc++6 zlib1g curl && \
+    wget -nv "https://github.com/PowerShell/PowerShell/releases/download/v${VER_PWSH}/powershell_${VER_PWSH}-1.debian.10_amd64.deb" -O /tmp/pwsh.deb && \
     dpkg -i /tmp/pwsh.deb && \
     rm -f /tmp/pwsh.deb
 
@@ -66,11 +66,11 @@ RUN wget -nv https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.
 ENV PATH "/conda3/bin:${PATH}"
 RUN echo "export PATH=\"/conda3/bin:\${PATH}\"" >> /etc/profile && \
     echo ". activate $VIRTUAL_ENV" >> /etc/profile && \
-    echo '$env:PATH = "/conda3/envs/$($env:VIRTUAL_ENV)/bin:" + $env:PATH' >> /opt/microsoft/powershell/6/profile.ps1
+    echo '$env:PATH = "/conda3/envs/$($env:VIRTUAL_ENV)/bin:" + $env:PATH' >> /opt/microsoft/powershell/7/profile.ps1
 
 # install VS code-server.
 RUN VER_CODESERVER=$(echo "$VER_VSCODE" | cut -d'-' -f1) && \
-    wget -nv "https://github.com/cdr/code-server/releases/download/${VER_CODESERVER}/code-server${VER_VSCODE}-linux-x86_64.tar.gz" -O /tmp/vs-code-server.tar.gz && \
+    wget -nv "https://github.com/cdr/code-server/releases/download/v${VER_CODESERVER}/code-server-${VER_VSCODE}-linux-amd64.tar.gz" -O /tmp/vs-code-server.tar.gz && \
     mkdir /tmp/vs-code-server && \
     tar -xzf /tmp/vs-code-server.tar.gz --strip 1 --directory /tmp/vs-code-server && \
     mv -f /tmp/vs-code-server/code-server /usr/local/bin/code-server && \
