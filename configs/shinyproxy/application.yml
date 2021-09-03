@@ -76,13 +76,15 @@ proxy:
       container-volumes:
         - "${CONTENT_PATH}/sites/${SITE_NAME}:/home/#{proxy.userId}/__ShinyStudio__:z"
         - "${CONTENT_PATH}/users/#{proxy.userId}:/home/#{proxy.userId}/__Personal__:z"
-        - "${CONTENT_PATH}/users/#{proxy.userId}/.rstudio:/home/#{proxy.userId}/.rstudio/monitored/user-settings:z"
+        - "${CONTENT_PATH}/users/#{proxy.userId}/.config:/home/#{proxy.userId}/.config:z"
+        - "${CONTENT_PATH}/users/#{proxy.userId}/.rstudio:/home/#{proxy.userId}/.local/share/rstudio:z"
         - "${SITE_NAME}_r_libraries:/r-libs"
         - "${SITE_NAME}_py_environment:/conda3"
         - "${SITE_NAME}_pwsh_modules:/home/#{proxy.userId}/.local/share/powershell/Modules"
       container-env:
         USER: "#{proxy.userId}"
         USERID: ${USERID}
+        WWW_ROOT_PATH: "#{proxySpec.containerSpecs[0].env.get('SHINYPROXY_PUBLIC_PATH')}"
       description: Full Screen
       port: 8787
       access-groups: [ 'admins' ]

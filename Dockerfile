@@ -1,4 +1,4 @@
-ARG VER_RLANG="3.6.3"
+ARG VER_RLANG="4.1.1"
 
 FROM rocker/verse:${VER_RLANG} as rstudio
 
@@ -22,13 +22,13 @@ ENV R_LIBS_USER /r-libs
 ENV APPLICATION_LOGS_TO_STDOUT false
 
 # add shiny immediately and expose port 3838.
-RUN export ADD=shiny && bash /etc/cont-init.d/add
+RUN /rocker_scripts/install_shiny_server.sh
 
 RUN apt-get update && \
     apt-get install -y apt-transport-https && \
     apt-get install -y curl nano
 
-# install Java 8 and ShinyProxy
+# install Java 11 and ShinyProxy
 RUN apt-get install -y openjdk-11-jdk-headless && \
     mkdir -p /opt/shinyproxy && \
     wget -nv "https://www.shinyproxy.io/downloads/shinyproxy-${VER_SHINYPROXY}.jar" -O /opt/shinyproxy/shinyproxy.jar
@@ -45,11 +45,15 @@ RUN R -e "install.packages(c('reticulate', 'png', 'DBI', 'odbc', 'shinydashboard
     chmod -R 777 /r-libs
 
 COPY samples /srv/shiny-server
+RUN mkdir -p /srv/shiny-server/_apps && \
+    git clone https://github.com/clevr-dev/Shiny-GEM /srv/shiny-server/_apps/Shiny-GEM && \
+    Rscript '/srv/shiny-server/_apps/Shiny-GEM/install-requirements.R' && \
+    chmod -R 777 /r-libs
 
 # install pwsh.
 # https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux
-RUN apt-get install -y less locales ca-certificates libicu63 libssl1.1 libc6 libgcc1 libgssapi-krb5-2 liblttng-ust0 libstdc++6 zlib1g curl && \
-    wget -nv "https://github.com/PowerShell/PowerShell/releases/download/v${VER_PWSH}/powershell_${VER_PWSH}-1.debian.10_amd64.deb" -O /tmp/pwsh.deb && \
+RUN apt-get install -y wget apt-transport-https software-properties-common liblttng-ust0 && \
+    wget -nv "https://github.com/PowerShell/PowerShell/releases/download/v${VER_PWSH}/powershell_${VER_PWSH}-1.ubuntu.20.04_amd64.deb" -O /tmp/pwsh.deb && \
     dpkg -i /tmp/pwsh.deb && \
     rm -f /tmp/pwsh.deb
 
