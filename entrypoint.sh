@@ -21,6 +21,16 @@ mv -f /etc/cont-init.d/userconf /tmp/userconf.sh
 chmod +x /tmp/userconf.sh
 source /tmp/userconf.sh
 
+# set up rstudio conf
+if [[ ! -z $WWW_ROOT_PATH ]]
+then
+    echo "Set www-root-path to $WWW_ROOT_PATH"
+    echo "www-root-path=$WWW_ROOT_PATH" >> /etc/rstudio/rserver_custom.conf
+else
+    echo "Not setting www-root-path"
+fi
+
+
 site_dir="/home/${USER}/__ShinyStudio__"
 if [ -d "$site_dir" ]; then
     

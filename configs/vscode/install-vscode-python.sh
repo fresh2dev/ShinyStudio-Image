@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-version='2019.10.41019'
+version='2021.8.1159798656'
 
 if [ ! -z "$1" ]; then
     version="$1"

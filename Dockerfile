@@ -1,4 +1,4 @@
-ARG VER_RLANG="3.6.2"
+ARG VER_RLANG="4.1.1"
 
 FROM rocker/verse:${VER_RLANG} as rstudio
 
@@ -6,12 +6,12 @@ FROM scratch
 
 COPY --from=rstudio / /
 
-ARG VER_PYTHON="3.7"
-ARG VER_PWSH="6.2.4"
-ARG VER_SHINYPROXY="2.3.0"
-ARG VER_VSCODE="2.1698-vsc1.41.1"
-ARG VER_CRONICLE="0.8.44"
-ARG TAG="latest"
+ARG VER_PYTHON="3.9"
+ARG VER_PWSH="7.1.4"
+ARG VER_SHINYPROXY="2.5.0"
+ARG VER_VSCODE="3.11.1"
+ARG VER_CRONICLE="0.8.61"
+ARG TAG="dev"
 ENV TAG=${TAG}
 
 LABEL maintainer="dm3ll3n@gmail.com"
@@ -22,14 +22,14 @@ ENV R_LIBS_USER /r-libs
 ENV APPLICATION_LOGS_TO_STDOUT false
 
 # add shiny immediately and expose port 3838.
-RUN export ADD=shiny && bash /etc/cont-init.d/add
+RUN /rocker_scripts/install_shiny_server.sh
 
 RUN apt-get update && \
     apt-get install -y apt-transport-https && \
     apt-get install -y curl nano
 
-# install Java 8 and ShinyProxy
-RUN apt-get install -y openjdk-8-jdk-headless && \
+# install Java 11 and ShinyProxy
+RUN apt-get install -y openjdk-11-jdk-headless && \
     mkdir -p /opt/shinyproxy && \
     wget -nv "https://www.shinyproxy.io/downloads/shinyproxy-${VER_SHINYPROXY}.jar" -O /opt/shinyproxy/shinyproxy.jar
 
@@ -45,11 +45,15 @@ RUN R -e "install.packages(c('reticulate', 'png', 'DBI', 'odbc', 'shinydashboard
     chmod -R 777 /r-libs
 
 COPY samples /srv/shiny-server
+RUN mkdir -p /srv/shiny-server/_apps && \
+    git clone https://github.com/clevr-dev/Shiny-GEM /srv/shiny-server/_apps/Shiny-GEM && \
+    Rscript '/srv/shiny-server/_apps/Shiny-GEM/install-requirements.R' && \
+    chmod -R 777 /r-libs
 
 # install pwsh.
 # https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux
-RUN apt-get install -y libc6 libgcc1 libgssapi-krb5-2 liblttng-ust0 libstdc++6 libcurl3 libunwind8 libuuid1 zlib1g libssl1.0.2 libicu57 && \
-    wget -nv "https://github.com/PowerShell/PowerShell/releases/download/v${VER_PWSH}/powershell_${VER_PWSH}-1.debian.9_amd64.deb" -O /tmp/pwsh.deb && \
+RUN apt-get install -y wget apt-transport-https software-properties-common liblttng-ust0 && \
+    wget -nv "https://github.com/PowerShell/PowerShell/releases/download/v${VER_PWSH}/powershell_${VER_PWSH}-1.ubuntu.20.04_amd64.deb" -O /tmp/pwsh.deb && \
     dpkg -i /tmp/pwsh.deb && \
     rm -f /tmp/pwsh.deb
 
@@ -66,18 +70,10 @@ RUN wget -nv https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.
 ENV PATH "/conda3/bin:${PATH}"
 RUN echo "export PATH=\"/conda3/bin:\${PATH}\"" >> /etc/profile && \
     echo ". activate $VIRTUAL_ENV" >> /etc/profile && \
-    echo '$env:PATH = "/conda3/envs/$($env:VIRTUAL_ENV)/bin:" + $env:PATH' >> /opt/microsoft/powershell/6/profile.ps1
+    echo '$env:PATH = "/conda3/envs/$($env:VIRTUAL_ENV)/bin:" + $env:PATH' >> /opt/microsoft/powershell/7/profile.ps1
 
-# install VS code-server.
-RUN VER_CODESERVER=$(echo "$VER_VSCODE" | cut -d'-' -f1) && \
-    wget -nv "https://github.com/cdr/code-server/releases/download/${VER_CODESERVER}/code-server${VER_VSCODE}-linux-x86_64.tar.gz" -O /tmp/vs-code-server.tar.gz && \
-    mkdir /tmp/vs-code-server && \
-    tar -xzf /tmp/vs-code-server.tar.gz --strip 1 --directory /tmp/vs-code-server && \
-    mv -f /tmp/vs-code-server/code-server /usr/local/bin/code-server && \
-    rm -rf /tmp/vs-code-server.tar.gz && \
-    # unsure why this is necessary, but it solves a fatal 'file not found' error.
-    mkdir -p /src/packages/server/build/web && \
-    echo '' > /src/packages/server/build/web/index.html
+## install VS code-server.
+RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/usr/local --version=${VER_VSCODE}
 
 # install cronicle.
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash && \
