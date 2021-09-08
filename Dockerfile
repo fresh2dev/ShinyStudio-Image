@@ -72,16 +72,8 @@ RUN echo "export PATH=\"/conda3/bin:\${PATH}\"" >> /etc/profile && \
     echo ". activate $VIRTUAL_ENV" >> /etc/profile && \
     echo '$env:PATH = "/conda3/envs/$($env:VIRTUAL_ENV)/bin:" + $env:PATH' >> /opt/microsoft/powershell/7/profile.ps1
 
-# install VS code-server.
-RUN VER_CODESERVER=$(echo "$VER_VSCODE" | cut -d'-' -f1) && \
-    wget -nv "https://github.com/cdr/code-server/releases/download/v${VER_CODESERVER}/code-server-${VER_VSCODE}-linux-amd64.tar.gz" -O /tmp/vs-code-server.tar.gz && \
-    mkdir /tmp/vs-code-server && \
-    tar -xzf /tmp/vs-code-server.tar.gz --strip 1 --directory /tmp/vs-code-server && \
-    mv -f /tmp/vs-code-server/code-server /usr/local/bin/code-server && \
-    rm -rf /tmp/vs-code-server.tar.gz && \
-    # unsure why this is necessary, but it solves a fatal 'file not found' error.
-    mkdir -p /src/packages/server/build/web && \
-    echo '' > /src/packages/server/build/web/index.html
+## install VS code-server.
+RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/usr/local --version=${VER_VSCODE}
 
 # install cronicle.
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash && \
